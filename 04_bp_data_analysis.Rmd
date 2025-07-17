@@ -1,0 +1,87 @@
+---
+title: "bp_data_analysis"
+author: "Nick Jeschke"
+date: "2025-07-09"
+output: html_document
+---
+
+Impute missing data using the impute_data function
+```{r}
+bp_data <- impute_data(bp_data)
+```
+
+
+
+Run LASSO on the dataframe 
+```{r}
+LASSO_bp <- LASSO_funct(bp_data)
+
+LASSO_plot_funct(LASSO_bp$lasso_fit, LASSO_bp$best_lambda, top_n = 20, title = "Top 20 Lasso Predictors")
+
+```
+
+
+
+Calculate AUC value for the LASSO
+```{r}
+library(pROC)
+
+pred_probs_LASSO <- predict(LASSO_bp$lasso_fit, newx = LASSO_bp$x_train, s = LASSO_bp$best_lambda, type = "response")
+
+roc_obj_LASSO <- roc(LASSO_bp$y_train, as.vector(pred_probs))
+
+auc_value_LASSO <- auc(roc_obj_LASSO)
+print(auc_value_LASSO)
+
+```
+
+
+
+Run Elastic Net on the dataframe
+```{r}
+# Alpha = 0.5 is standard Elastic Net
+ELASTIC_bp <- ElasticNet_funct(bp_data, alpha = 0.5)
+
+plot_ElasticNet_funct(ELASTIC_bp$elastic_fit, ELASTIC_bp$best_lambda, top_n = 20, title = "Top 20 Elastic Net Predictors")
+
+
+```
+
+
+
+Calculate AUC value for the Elastic Net
+```{r}
+library(pROC)
+
+roc_obj_ELASTIC <- roc(ELASTIC_bp$y_test, as.vector(ELASTIC_bp$pred_probs_test))
+auc(roc_obj)
+
+```
+
+
+
+Run Random Forest model on the dataframe
+```{r}
+RF_bp <- RF_funct(bp_data)
+
+BP_plot <- plot_RF_funct(RF_bp$model)
+
+print(BP_plot)
+```
+
+
+
+Calculate AUC value for the Random Forest
+```{r}
+RF_probs <- predict(RF_bp$model, newdata = RF_bp$test_data, type = "prob")[, "Yes"]
+
+true_labels_bp <- RF_bp$test_data$bp_control_binary
+
+roc_obj_RF <- roc(true_labels_bp, RF_probs)
+auc_value_RF <- auc(roc_obj_RF)
+
+print(auc_value_RF)
+
+```
+
+

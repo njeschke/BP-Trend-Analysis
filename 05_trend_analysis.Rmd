@@ -1,0 +1,108 @@
+---
+title: "Trend_analysis"
+author: "Nick Jeschke"
+date: "2025-07-10"
+output: html_document
+---
+
+Load necessary libraries
+```{r}
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+```
+
+
+
+Trend in BP Control, Hypertension Awareness, and Hypertension Med Use
+```{r}
+# Summarize trends
+trend_df <- bp_data %>%
+  group_by(Survey_Year) %>%
+  summarise(
+    bp_control_rate = mean(bp_control_accaha == "Yes", na.rm = TRUE),
+    htn_awareness_rate = mean(htn_aware == "Yes", na.rm = TRUE),
+    bp_med_use_rate = mean(bp_med_use == "Yes", na.rm = TRUE)
+  ) %>%
+  pivot_longer(cols = c(bp_control_rate, htn_awareness_rate, bp_med_use_rate),
+               names_to = "metric",
+               values_to = "proportion")
+
+# Create plot
+ggplot(trend_df, aes(x = Survey_Year, y = proportion, color = metric)) +
+  geom_line(size = 1.2) +
+  geom_point(size = 2) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+  labs(
+    title = "Trends in BP Control, HTN Awareness, and Med Use",
+    x = "Survey Year",
+    y = "Proportion",
+    color = "Metric"
+  ) +
+  scale_color_manual(
+    values = c("bp_control_rate" = "steelblue",
+               "htn_awareness_rate" = "darkorange",
+               "bp_med_use_rate" = "seagreen"),
+    labels = c("BP Control", "Medication Use", "Hypertension Awareness")
+  ) +
+  theme_minimal(base_size = 14)
+
+
+```
+
+
+Trend in BP control and resistant hypertension 
+```{r}
+#Summarize the proportions by year
+bp_trend <- bp_data %>%
+  group_by(Survey_Year) %>%
+  summarize(
+    bp_control = mean(bp_control_accaha == "Yes", na.rm = TRUE),
+    htn_resistant = mean(htn_any_resistant == "Yes", na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  pivot_longer(cols = c(bp_control, htn_resistant),
+               names_to = "Variable",
+               values_to = "Proportion")
+
+#Plot the trends
+ggplot(bp_trend, aes(x = Survey_Year, y = Proportion, color = Variable)) +
+  geom_line(size = 1) +
+  geom_point(size = 2) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+  labs(
+    title = "BP Control and Resistant Hypertension Over Time",
+    x = "Survey Year",
+    y = "Proportion",
+    color = ""
+  ) +
+  theme_minimal()
+
+
+```
+
+
+
+Correlation values between BP Control, BP med use, and hypertension awareness
+```{r}
+# Convert to 0/1 binary format
+bp_data_binary <- bp_data %>%
+  mutate(
+    bp_control_binary = ifelse(bp_control_accaha == "Yes", 1, 0),
+    bp_med_use_binary = ifelse(bp_med_use == "Yes", 1, 0),
+    htn_aware_binary  = ifelse(htn_aware == "Yes", 1, 0)
+  )
+
+# Compute correlations
+cor_control_med <- cor(bp_data_binary$bp_control_binary, bp_data_binary$bp_med_use_binary, use = "complete.obs")
+cor_med_awareness <- cor(bp_data_binary$bp_med_use_binary, bp_data_binary$htn_aware_binary, use = "complete.obs")
+cor_control_awareness <- cor(bp_data_binary$bp_control_binary, bp_data_binary$htn_aware_binary, use = "complete.obs")
+
+
+# Print results
+cat("Correlation between BP Control and Medication Use:", round(cor_control_med, 3), "\n")
+cat("Correlation between Medication Use and HTN Awareness:", round(cor_med_awareness, 3), "\n")
+cat("Correlation between BP Control Use and HTN Awareness:", round(cor_control_awareness, 3), "\n")
+
+
+```

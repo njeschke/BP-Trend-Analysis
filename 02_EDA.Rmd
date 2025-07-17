@@ -1,0 +1,65 @@
+---
+title: "EDA.rmd"
+author: "Nick Jeschke"
+date: "2025-07-07"
+output: html_document
+---
+
+Exploratory Data Analysis
+
+```{r}
+dim(bp_data_all)
+colnames(bp_data_all)
+
+```
+160 Columns, 26,757 observations
+
+Year in bp_data$Survey_Year: 1999-2017
+1999, 2001, 2003, 2005, 2007, 2009, 2011, 2013, 2015, 2017
+
+Outcome of interest: bp_data$bp_control_accaha
+Binary BP control (<140/<90), according to accaha guidelines
+
+
+
+Checking those two variables for missingness, number of cycles
+```{r}
+sum(is.na(bp_data_all$bp_control_accaha))
+sum(is.na(bp_data_all$Survey_Year))
+
+unique(bp_data_all$Survey_Year)
+
+```
+No missing values for either bp_control or survey_year, surveys from 1999-2017 available
+
+
+
+Investigating general trend in BP control over all
+```{r}
+freq_table <- table(bp_data_all$Survey_Year, bp_data_all$bp_control_accaha)
+prop_table <- prop.table(freq_table, margin = 1)
+
+bpbyyear <- barplot(
+  t(prop_table),                    
+  beside = FALSE,                   
+  col = c("lightblue", "salmon"),   
+  legend.text = TRUE,
+  args.legend = list(title = "BP Controlled", x = "bottomleft"),
+  xlab = "Year",
+  ylab = "Proportion",
+  main = "Proportion of BP Control by Year"
+)
+
+```
+Generally decreases from 1999 to 2013, but then starts to increase slightly after that
+
+
+
+Checking missingness by row and column
+```{r}
+missing_props <- colMeans(is.na(bp_data_all))
+hist(missing_props, xlab="Column Missingness", main="Proportion of Missing Data by Column")
+
+row_missing_counts <- rowSums(is.na(bp_data_all))
+hist(row_missing_counts, xlab = "Row Missingness", main="Proportion of Missing Data by Row")
+```
