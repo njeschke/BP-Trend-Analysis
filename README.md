@@ -11,7 +11,7 @@ This project is based on the ENAR 2025 DataFest data analysis competition. The p
 
 **Elastic Net:** It is a linear regression method similar to a LASSO, although with a different penalty coefficient. It does not shrink any variables to exactly zero, but handles colinearity better and is more flexible than the LASSO.
 
-**Random Forest:** An ensemble of decision trees using bootstrapped samples with random feature selection. This method better captures nonlinear relationships and interactions between variables, compared to the LASSO and Elastic Net, which are linear regressions.
+**Random Forest:** An ensemble of decision trees using bootstrapped samples with random feature selection. This method better captures nonlinear relationships and interactions between variables, compared to the LASSO and Elastic Net, which are regressions.
 
 
 # Project Structure
@@ -28,11 +28,11 @@ This project is based on the ENAR 2025 DataFest data analysis competition. The p
 
 **Impute_function.R** - Function that imputes missing data into the dataframe
 
-**LASSO_function.R** - Function that fits a LASSO model to the dataframe
+**LASSO_function.R** - Function that fits a LASSO model to the dataframe and plots top predictors
 
-**Elastic_Net_function.R** - Function that fits an Elastic Net model to the dataframe
+**Elastic_Net_function.R** - Function that fits an Elastic Net model to the dataframe and plots top predictors
 
-**RF_function.R** - Function that fits a Random Forest model to the data frame
+**RF_function.R** - Function that fits a Random Forest model to the data frame and plots top predictors
 
 
 # Results
@@ -43,6 +43,10 @@ The AUC for the LASSO and Elastic Net models are 0.88 and 0.87 for the Forest Pl
 # Conclusion
 
 My findings indicate that BP control is decreasing due to a lack of hypertension awareness and in turn decreasing BP med use. Increased BP testing to ensure patients are aware of their own hypertension and are perscribed the correct medication is key to increasing BP control.
+
+# Libraries Needed
+
+dplyr, pROC, ggplot2, tidyr, glmnet, caret, randomForest
 
 
 # Acknowledgements
