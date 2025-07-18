@@ -2,10 +2,10 @@
 
 # Description
 
-This project is based on the ENAR 2025 DataFest data analysis competition. The project aims to understand the decline in blood pressure (BP) control among US adults with hypertension. BP control is defined as systolic BP < 140 and diastolic BP < 90. The prevalence of BP control had been rising until 2013, but since then rate of controlled BP has been decreasing. The goal of this project is to understand and explain what factors explain this trend. It uses the US National Health and Nutrition Examination Survey (NHANES) data, which has been collecting health data on Americans every two years since 1999. The ENAR DataFest provided a preprocessed dataset to analyze, which contains ~26,000 observations of 160 variables. In this project, I load the data, do an exploratory analysis, clean the data and handle missing values, apply machine learning methods to find top predictors for BP control, and plot relationships between variables. 
+This project is based on the ENAR 2025 DataFest data analysis competition. The project aims to understand the decline in blood pressure (BP) control among US adults with hypertension. BP control is defined as systolic BP < 140 and diastolic BP < 90. The prevalence of BP control had been rising until 2013, but since then rate of controlled BP has been decreasing. The goal of this project is to understand and explain what factors explain this trend. It uses the US National Health and Nutrition Examination Survey (NHANES) data, which has been collecting health data on Americans every two years since 1999. The ENAR DataFest provided a preprocessed dataset to analyze, which contains ~26,000 observations of 160 variables. In this project, I load the data, do an exploratory analysis, clean the data and handle missing values, apply machine learning methods (LASSO, Elastic Net, and Random Forest) to find top predictors for BP control, and plot relationships between variables. 
 
 
-# Methods
+# Statistical Methods
 
 **LASSO:** Short for Least Absolute Shrinkage and Selection Operator. It's a linear regression method that adds a penalty to the absolute value of the coefficients. It helps prevent overfitting and performs variable selection by shrinking some coefficients to zero. Good for when only a few uncorrelated predictors matter.
 
